@@ -89,7 +89,7 @@ Users can export or remove locally stored HomeCalc data through the extension se
 
 For account, billing, cancellation, refund or privacy enquiries:
 
-**Email:** YOUR_SUPPORT_EMAIL
+**Email:** hir9876@gmail.com
 
 Please include the email address associated with your HomeCalc account, but never send your password or complete payment-card details.
 
