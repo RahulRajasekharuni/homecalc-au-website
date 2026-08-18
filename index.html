@@ -24,6 +24,17 @@
     </div>
   </header>
 
+  <section class="checkout-notice" data-checkout-notice hidden aria-live="polite">
+    <div class="shell checkout-notice-inner">
+      <span class="checkout-notice-mark" aria-hidden="true">HC</span>
+      <div>
+        <strong data-checkout-title>Payment update</strong>
+        <p data-checkout-message></p>
+      </div>
+      <button type="button" data-checkout-dismiss aria-label="Dismiss this message">Dismiss</button>
+    </div>
+  </section>
+
   <main id="top">
     <section class="hero">
       <div class="shell hero-grid">
@@ -148,12 +159,18 @@
             </div>
           </details>
 
-          <details>
+          <details id="privacy" open>
             <summary>Privacy summary</summary>
             <div class="policy-copy">
-              <p>HomeCalc stores listing analyses, user inputs, preferences, notes and shortlist information to provide its features. Much of this information remains on your device.</p>
-              <p>When signed in, account information, plan status, usage counts and synced shortlist information may be stored securely by our service providers. Payment details are processed by Stripe; HomeCalc does not receive or store complete card numbers.</p>
-              <p>HomeCalc does not sell personal information or collect a general history of websites visited. Local data can be exported or removed through the extension settings.</p>
+              <h3>Information handled</h3>
+              <p>HomeCalc reads supported realestate.com.au and Domain listing pages to extract the property address, price and advertised characteristics needed for its calculations. It also handles the assumptions, ratings, notes, targets and preferences you enter. Calculations and preferences are cached locally on your device.</p>
+              <p>When you sign in, Supabase stores your email, account identifiers, authentication records, plan status and monthly usage. When you analyse a property, HomeCalc sends its portal, listing identifier, address-derived property key and price to Supabase to enforce the monthly allowance. Saved shortlist snapshots, listing facts, notes and comparison inputs are synced to your account.</p>
+              <p>Stripe processes purchases, subscriptions and refunds. HomeCalc stores Stripe customer, subscription and payment identifiers needed to provide access, but does not receive or store complete payment-card numbers. Supabase may use our configured email provider to deliver account verification and recovery messages.</p>
+              <h3>Purpose and sharing</h3>
+              <p>This information is used only to provide and secure property analysis, comparison, account, usage-limit and billing features. It is shared only with service providers necessary to operate those features, or where required by law. HomeCalc does not sell user data, use it for personalised advertising, or monitor pages outside its supported property portals.</p>
+              <h3>Control, retention and security</h3>
+              <p>Data is transmitted over HTTPS. You can export or delete local extension data from HomeCalc Options. Removing the extension removes its local data; synced account and billing records may remain. Contact support to request access to or deletion of server-held personal information. Some billing, security and transaction records may be retained where legally or operationally required.</p>
+              <p>HomeCalc's use of information complies with the Chrome Web Store User Data Policy, including its Limited Use requirements.</p>
             </div>
           </details>
 
@@ -192,5 +209,36 @@
       <nav aria-label="Footer navigation"><a href="#pricing">Pricing</a><a href="#policies">Policies</a><a href="#support">Support</a></nav>
     </div>
   </footer>
+  <script>
+    (() => {
+      const state = new URLSearchParams(window.location.search).get('homecalc_checkout');
+      const messages = {
+        success: {
+          title: 'Payment received',
+          message: 'HomeCalc is updating your access now. You can close this tab and return to the extension; it may take a few seconds.',
+        },
+        cancel: {
+          title: 'Checkout cancelled',
+          message: 'No payment was completed. You can close this tab and return to HomeCalc whenever you are ready.',
+        },
+        portal: {
+          title: 'Billing updated',
+          message: 'Your billing changes have been saved. You can close this tab and return to the extension.',
+        },
+      };
+      const copy = messages[state];
+      const notice = document.querySelector('[data-checkout-notice]');
+      if (!copy || !notice) return;
+
+      notice.querySelector('[data-checkout-title]').textContent = copy.title;
+      notice.querySelector('[data-checkout-message]').textContent = copy.message;
+      notice.hidden = false;
+      notice.querySelector('[data-checkout-dismiss]').addEventListener('click', () => {
+        notice.hidden = true;
+        const cleanUrl = `${window.location.pathname}${window.location.hash}`;
+        window.history.replaceState({}, '', cleanUrl);
+      });
+    })();
+  </script>
 </body>
 </html>
